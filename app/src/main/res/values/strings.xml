@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">uFoodBeFree</string>
+
+    <!-- Auth -->
+    <string name="label_emailpassword">Email/Password Authentication</string>
+    <string name="desc_emailpassword">Use an email and password to authenticate with Firebase.</string>
+    <string name="hint_user_id">User ID</string>
+    <string name="hint_email">Email</string>
+    <string name="hint_password">Password</string>
+    <string name="field_required">Field required.</string>
+    <string name="sign_in">Sign In</string>
+    <string name="create_account">Create Account</string>
+    <string name="sign_out">Sign Out</string>
+
+    <!-- Search -->
+    <string name="btnDescripcion">Buscar</string>
+    <string name="btnTodos">Todos</string>
+
+    <!-- Menu -->
+    <string name="menuPreviousSearches">Previous Searches</string>
+</resources>
