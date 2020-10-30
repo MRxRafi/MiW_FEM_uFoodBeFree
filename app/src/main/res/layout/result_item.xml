@@ -5,25 +5,27 @@
     android:layout_height="match_parent">
 
     <ImageView
-        android:id="@+id/image"
+        android:id="@+id/recipeImage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:maxWidth="100dp"
-        android:maxHeight="100dp"
-        app:srcCompat="@drawable/ic_launcher_background" />
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginBottom="5dp" />
 
     <TextView
         android:id="@+id/recipeName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/image"
+        android:layout_marginBottom="5dp"
+        android:layout_toRightOf="@+id/recipeImage"
         android:text="Sapere Aude Test" />
 
     <TextView
         android:id="@+id/recipeDescription"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/image"
+        android:layout_toRightOf="@+id/recipeImage"
         android:layout_below="@+id/recipeName"
         android:text="Probando el famoso sapere aude" />
 </RelativeLayout>

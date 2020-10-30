@@ -1,5 +1,6 @@
 package es.miw.fem.rafa.ufoodbefree;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -24,6 +25,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         etPasswordField = findViewById(R.id.fieldPassword);
 
         findViewById(R.id.buttonSignIn).setOnClickListener(this);
+
+        // Mostrar el icono back en la ActionBar
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            // Icono Actionbar
+            actionBar.setHomeAsUpIndicator(R.mipmap.ic_miw_launcher_round);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
     }
 
     @Override
