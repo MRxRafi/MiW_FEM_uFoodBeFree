@@ -10,11 +10,34 @@
     tools:context=".MainActivity"
     android:orientation="vertical">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Switch
+            android:id="@+id/statusSwitch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:checked="false"
+            android:text="@string/status_logged" />
+
+        <TextView
+            android:id="@+id/statusEmail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/statusId"
+            android:layout_marginBottom="8dp"
+            android:textStyle="bold"
+            tools:text="Email: none" />
+    </LinearLayout>
+
     <TextView
         android:id="@+id/headerEmailPassword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="25dp"
         android:layout_marginBottom="8dp"
         android:text="@string/label_emailpassword" />
 

@@ -9,13 +9,21 @@
     <string name="hint_password">Password</string>
     <string name="field_required">Field required.</string>
     <string name="sign_in">Sign In</string>
-    <string name="create_account">Create Account</string>
+    <string name="sign_in_required">Authentication required for this action</string>
     <string name="sign_out">Sign Out</string>
+    <string name="signed_out">Signed Out</string>
+    <string name="status_logged">Logged</string>
+    <string name="create_account">Create Account</string>
+    <string name="id_fmt">User ID: %s</string>
+    <string name="email_fmt">Email: %s</string>
+    <string name="email_none">Email: none</string>
+
 
     <!-- Search -->
     <string name="btnDescripcion">Buscar</string>
     <string name="btnTodos">Todos</string>
 
     <!-- Menu -->
-    <string name="menuPreviousSearches">Previous Searches</string>
+    <string name="menuPreviousSearches">Previous searches</string>
+    <string name="menuRecipes">Search recipes</string>
 </resources>

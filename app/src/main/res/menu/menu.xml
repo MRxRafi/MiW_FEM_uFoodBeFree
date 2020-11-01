@@ -4,8 +4,4 @@
         android:id="@+id/menuPreviousSearches"
         android:title="@string/menuPreviousSearches" />
 
-    <item
-        android:id="@+id/menuSignOut"
-        android:title="@string/sign_out" />
-
 </menu>

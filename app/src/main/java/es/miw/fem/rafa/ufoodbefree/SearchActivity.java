@@ -1,5 +1,6 @@
 package es.miw.fem.rafa.ufoodbefree;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -11,9 +12,13 @@ import android.widget.Toast;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 public class SearchActivity extends AppCompatActivity {
 
     private static final String LOG_TAG = "MiW";
+
+    private FirebaseAuth fAuth;
 
     private EditText etRecipeName;
     private ListView lvResultsList;
@@ -25,6 +30,8 @@ public class SearchActivity extends AppCompatActivity {
 
         etRecipeName = (EditText) findViewById(R.id.recipeNameSearch);
         lvResultsList = (ListView) findViewById(R.id.resultsList);
+
+        fAuth = FirebaseAuth.getInstance();
 
         Recipe recipe1 = new Recipe("https://image.shutterstock.com/image-photo/carrot-isolated-on-white-background-260nw-795704785.jpg",
                 "ZanahoriaRecipe", "Pues zanahorias solo");
@@ -61,6 +68,7 @@ public class SearchActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu, menu);
+        menu.add(Menu.NONE, 2, Menu.NONE, R.string.sign_out);
         return true;
     }
 
@@ -68,17 +76,21 @@ public class SearchActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menuPreviousSearches:
-                /*if(mAuth.getCurrentUser() != null) {
-                    startActivity(new Intent(this, CountriesListActivity.class));
-                } else {
-                    Toast.makeText(this, R.string.txtNoLogado, Toast.LENGTH_SHORT)
-                            .show();
-                }
-                */
+                // TODO Mostrar listado búsquedas anteriores del usuario
+
                 break;
-            case R.id.menuSignOut:
+            case 2:
+                this.signOut();
                 break;
         }
         return true;
+    }
+
+    private void signOut() {
+        fAuth.signOut();
+        String strLoggedOut = "Usuario desconectado";
+        Toast.makeText(this, strLoggedOut, Toast.LENGTH_SHORT)
+                .show();
+        startActivity(new Intent(this, MainActivity.class));
     }
 }
