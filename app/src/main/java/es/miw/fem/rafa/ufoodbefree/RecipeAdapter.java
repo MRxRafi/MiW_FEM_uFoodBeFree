@@ -51,7 +51,7 @@ public class RecipeAdapter extends ArrayAdapter {
 
         Glide.with(context)
                 .load(recipes[position].getImage())
-                .override(300, 300)
+                .override(400, 400)
                 .centerCrop()
                 .into(ivRecipeImage);
         tvRecipeTitle.setText(recipes[position].getTitle());
