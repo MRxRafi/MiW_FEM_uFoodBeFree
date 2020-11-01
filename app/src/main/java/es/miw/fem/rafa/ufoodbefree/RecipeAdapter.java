@@ -16,17 +16,16 @@ import androidx.annotation.Nullable;
 
 import com.bumptech.glide.Glide;
 
-import es.miw.fem.rafa.ufoodbefree.models.RecipeList;
-import es.miw.fem.rafa.ufoodbefree.models.Result;
+import es.miw.fem.rafa.ufoodbefree.dtos.ResultDto;
 
 
 public class RecipeAdapter extends ArrayAdapter {
     private Context context;
-    private Result[] recipes;
+    private ResultDto[] recipes;
     private int idResourceLayout;
 
 
-    public RecipeAdapter(@NonNull Context context, int resource, @NonNull Result[] recipes) {
+    public RecipeAdapter(@NonNull Context context, int resource, @NonNull ResultDto[] recipes) {
         super(context, resource, recipes);
         this.context = context;
         this.idResourceLayout = resource;

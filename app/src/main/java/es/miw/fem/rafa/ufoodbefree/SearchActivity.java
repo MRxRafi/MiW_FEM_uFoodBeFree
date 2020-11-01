@@ -10,16 +10,19 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.gson.GsonBuilder;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import es.miw.fem.rafa.ufoodbefree.dtos.ResultDto;
 import es.miw.fem.rafa.ufoodbefree.models.RecipeList;
-import es.miw.fem.rafa.ufoodbefree.models.Result;
+import es.miw.fem.rafa.ufoodbefree.utils.GsonSingle;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -33,10 +36,14 @@ public class SearchActivity extends AppCompatActivity {
 
     private static final String LOG_TAG = "MiW";
 
+    private static final String SAVED_INSTANCE = "results";
+
     private FirebaseAuth fAuth;
 
     private EditText etRecipeName;
     private ListView lvResultsList;
+
+    ResultDto[] resultsDto;
 
     private IRecipeRESTAPIService apiService;
 
@@ -70,8 +77,6 @@ public class SearchActivity extends AppCompatActivity {
 
     public void obtainRecipes(View v) {
         String recipeSearch = etRecipeName.getText().toString();
-        Toast.makeText(getApplicationContext(), recipeSearch, Toast.LENGTH_SHORT)
-                .show();
 
         Map<String, String> query = new HashMap<>();
         query.put("query", recipeSearch);
@@ -87,13 +92,15 @@ public class SearchActivity extends AppCompatActivity {
                 RecipeList recipeList = response.body();
 
                 if(null != recipeList) {
-                    Result[] results = new Result[recipeList.getResults().size()];
-                    recipeList.getResults().toArray(results);
+                    resultsDto = new ResultDto[recipeList.getResults().size()];
+                    for(int i = 0; i < recipeList.getResults().size(); i++) {
+                        resultsDto[i] = ResultDto.fromResult(recipeList.getResults().get(i));
+                    }
 
                     RecipeAdapter adapter = new RecipeAdapter(
                             SearchActivity.this,
                             R.layout.result_item,
-                            results
+                            resultsDto
                     );
 
                     lvResultsList.setAdapter(adapter);
@@ -112,6 +119,40 @@ public class SearchActivity extends AppCompatActivity {
                 Log.e(LOG_TAG, t.getMessage());
             }
         });
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        if(null != resultsDto) {
+            String[] savedRecipes = new String[resultsDto.length];
+            for(int i = 0; i < resultsDto.length; i++) {
+                savedRecipes[i] = GsonSingle.getGsonParser().toJson(resultsDto[i]);
+            }
+            outState.putStringArray(SAVED_INSTANCE, savedRecipes);
+        }
+    }
+
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        String[] savedRecipes = savedInstanceState.getStringArray(SAVED_INSTANCE);
+        if(savedRecipes != null) {
+            resultsDto = new ResultDto[savedRecipes.length];
+            for(int i = 0; i < savedRecipes.length; i++) {
+                resultsDto[i] = GsonSingle.getGsonParser().fromJson(savedRecipes[i], ResultDto.class);
+            }
+
+            RecipeAdapter adapter = new RecipeAdapter(
+                    SearchActivity.this,
+                    R.layout.result_item,
+                    resultsDto
+            );
+
+            lvResultsList.setAdapter(adapter);
+        }
     }
 
     @Override
