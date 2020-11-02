@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -65,6 +66,14 @@ public class SearchActivity extends AppCompatActivity {
 
         apiService = retrofit.create(IRecipeRESTAPIService.class);
 
+        lvResultsList.setClickable(true);
+        lvResultsList.setOnItemClickListener((parent, view, position, id) -> {
+
+            Intent intent = new Intent(this, RecipeActivity.class);
+            Log.i(LOG_TAG, "click en el elemento " + resultsDto[position].getTitle() + " de mi ListView");
+            intent.putExtra(SAVED_INSTANCE, GsonSingle.getGsonParser().toJson(resultsDto[position]));
+            startActivity(intent);
+        });
 
         // Mostrar el icono back en la ActionBar
         ActionBar actionBar = getSupportActionBar();
