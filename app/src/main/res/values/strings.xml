@@ -23,6 +23,7 @@
     <string name="btnDescripcion">Buscar</string>
     <string name="btnTodos">Todos</string>
     <string name="strError">No se ha recuperado ninguna receta</string>
+    <string name="txtLastSearches">Búsquedas anteriores</string>
 
     <!-- Menu -->
     <string name="menuPreviousSearches">Previous searches</string>

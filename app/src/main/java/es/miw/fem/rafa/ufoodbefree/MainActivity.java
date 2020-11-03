@@ -93,14 +93,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menuPreviousSearches:
-                // TODO Mostrar listado búsquedas anteriores del usuario
-                /*if(mAuth.getCurrentUser() != null) {
-                    startActivity(new Intent(this, CountriesListActivity.class));
+                if(fAuth.getCurrentUser() != null) {
+                    startActivity(new Intent(this, LastSearchesActivity.class));
                 } else {
-                    Toast.makeText(this, R.string.txtNoLogado, Toast.LENGTH_SHORT)
+                    Toast.makeText(this, getString(R.string.sign_in_required), Toast.LENGTH_SHORT)
                             .show();
                 }
-                */
                 break;
             case 2:
                 if(fAuth.getCurrentUser() != null) {

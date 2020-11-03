@@ -88,6 +88,8 @@ public class SearchActivity extends AppCompatActivity {
         if(fAuth.getCurrentUser() != null) {
             String recipeSearch = etRecipeName.getText().toString();
 
+            // TODO Guardar Search en BBDD recipeSearch
+
             Map<String, String> query = new HashMap<>();
             query.put("query", recipeSearch);
             query.put("addRecipeInformation", "true");
@@ -181,7 +183,12 @@ public class SearchActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menuPreviousSearches:
-                // TODO Mostrar listado búsquedas anteriores del usuario
+                if(fAuth.getCurrentUser() != null) {
+                    startActivity(new Intent(this, LastSearchesActivity.class));
+                } else {
+                    Toast.makeText(this, getString(R.string.sign_in_required), Toast.LENGTH_SHORT)
+                            .show();
+                }
 
                 break;
             case 2:

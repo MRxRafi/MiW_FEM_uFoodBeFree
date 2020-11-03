@@ -22,6 +22,9 @@
         <activity android:name=".RecipeActivity">
 
         </activity>
+        <activity android:name=".LastSearchesActivity">
+
+        </activity>
     </application>
 
 </manifest>
