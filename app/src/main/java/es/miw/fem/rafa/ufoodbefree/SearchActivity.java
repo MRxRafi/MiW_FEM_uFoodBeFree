@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import es.miw.fem.rafa.ufoodbefree.dtos.ResultDto;
+import es.miw.fem.rafa.ufoodbefree.models.LastSearch;
 import es.miw.fem.rafa.ufoodbefree.models.RecipeList;
 import es.miw.fem.rafa.ufoodbefree.utils.GsonSingle;
 import retrofit2.Call;
@@ -89,6 +90,8 @@ public class SearchActivity extends AppCompatActivity {
             String recipeSearch = etRecipeName.getText().toString();
 
             // TODO Guardar Search en BBDD recipeSearch
+            LastSearch lastSearch = new LastSearch(recipeSearch, fAuth.getCurrentUser().getEmail());
+
 
             Map<String, String> query = new HashMap<>();
             query.put("query", recipeSearch);
