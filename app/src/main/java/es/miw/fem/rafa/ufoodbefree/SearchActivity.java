@@ -16,6 +16,8 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.gson.GsonBuilder;
 
 import java.util.HashMap;
@@ -41,6 +43,8 @@ public class SearchActivity extends AppCompatActivity {
     private static final String SAVED_INSTANCE = "results";
 
     private FirebaseAuth fAuth;
+    FirebaseDatabase fDatabase;
+    DatabaseReference fDatabaseReference;
 
     private EditText etRecipeName;
     private ListView lvResultsList;
@@ -58,6 +62,8 @@ public class SearchActivity extends AppCompatActivity {
         lvResultsList = (ListView) findViewById(R.id.resultsList);
 
         fAuth = FirebaseAuth.getInstance();
+        fDatabase = FirebaseDatabase.getInstance();
+        fDatabaseReference = fDatabase.getReference().child("lastSearches");
 
 
         Retrofit retrofit = new Retrofit.Builder()
@@ -89,9 +95,9 @@ public class SearchActivity extends AppCompatActivity {
         if(fAuth.getCurrentUser() != null) {
             String recipeSearch = etRecipeName.getText().toString();
 
-            // TODO Guardar Search en BBDD recipeSearch
             LastSearch lastSearch = new LastSearch(recipeSearch, fAuth.getCurrentUser().getEmail());
 
+            fDatabaseReference.push().setValue(lastSearch);
 
             Map<String, String> query = new HashMap<>();
             query.put("query", recipeSearch);

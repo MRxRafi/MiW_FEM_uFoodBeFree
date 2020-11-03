@@ -1,6 +1,7 @@
 package es.miw.fem.rafa.ufoodbefree;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -12,6 +13,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -56,35 +58,13 @@ public class LastSearchesActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 // TODO Iniciar actividad search realizando búsqueda seleccionada
-                String str = ((TextView) view).getText().toString();
+                String str = ((TextView) view.findViewById(R.id.tvSearchItem)).getText().toString();
                 Toast.makeText(LastSearchesActivity.this, str, Toast.LENGTH_SHORT)
                         .show();
             }
         });
 
-        // btb Listener will be called when changes were performed in DB
-        fChildEventListener = new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                // Deserialize data from DB into our FriendlyMessage object
-                LastSearch lastSearch = dataSnapshot.getValue(LastSearch.class);
-                adaptador.add(lastSearch);
-            }
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {}
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {}
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {}
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {}
-        };
-        fDatabaseReference.addChildEventListener(fChildEventListener);
+        this.attachDatabaseReadListener();
 
         // Mostrar el icono back en la ActionBar
         ActionBar actionBar = getSupportActionBar();
@@ -93,6 +73,18 @@ public class LastSearchesActivity extends AppCompatActivity {
             actionBar.setHomeAsUpIndicator(R.mipmap.ic_miw_launcher_round);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        detachDatabaseReadListener();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        attachDatabaseReadListener();
     }
 
     @Override
@@ -109,6 +101,39 @@ public class LastSearchesActivity extends AppCompatActivity {
                 break;
         }
         return true;
+    }
+
+    private void attachDatabaseReadListener() {
+        if(fChildEventListener == null) {
+            // btb Listener will be called when changes were performed in DB
+            fChildEventListener = new ChildEventListener() {
+                @Override
+                public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                    LastSearch lastSearch = dataSnapshot.getValue(LastSearch.class);
+                    if(lastSearch.getUsername().equals(fAuth.getCurrentUser().getEmail())) adaptador.add(lastSearch);;
+                }
+
+                @Override
+                public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {}
+
+                @Override
+                public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {}
+
+                @Override
+                public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {}
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {}
+            };
+            fDatabaseReference.addChildEventListener(fChildEventListener);
+        }
+    }
+
+    private void detachDatabaseReadListener() {
+        if(fChildEventListener != null) {
+            fDatabaseReference.removeEventListener(fChildEventListener);
+            fChildEventListener = null;
+        }
     }
 
     private void signOut() {

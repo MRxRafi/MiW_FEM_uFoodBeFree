@@ -4,6 +4,8 @@ public class LastSearch {
     private String lastSearch;
     private String username;
 
+    public LastSearch() {}
+
     public LastSearch(String lastSearch, String username) {
         this.lastSearch = lastSearch;
         this.username = username;
