@@ -36,7 +36,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class SearchActivity extends AppCompatActivity {
     private static final String API_BASE_URL = "https://api.spoonacular.com";
     private static final String API_KEY = "7b85f04565ac44609112d2e20c7fa24c";
-    private static final String MAX_RESULTS_NUMBER = "5";
+    private static final String MAX_RESULTS_NUMBER = "10";
 
     private static final String LOG_TAG = "MiW";
 
