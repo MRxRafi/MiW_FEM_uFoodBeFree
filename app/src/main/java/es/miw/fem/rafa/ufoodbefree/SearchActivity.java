@@ -41,6 +41,7 @@ public class SearchActivity extends AppCompatActivity {
     private static final String LOG_TAG = "MiW";
 
     private static final String SAVED_INSTANCE = "results";
+    private static final String SAVED_SEARCH = "search";
 
     private FirebaseAuth fAuth;
     FirebaseDatabase fDatabase;
@@ -82,6 +83,11 @@ public class SearchActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
+        String lastSearch = getIntent().getStringExtra(SAVED_SEARCH);
+        if(lastSearch != null) {
+            this.callAPI(lastSearch);
+        }
+
         // Mostrar el icono back en la ActionBar
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -96,55 +102,57 @@ public class SearchActivity extends AppCompatActivity {
             String recipeSearch = etRecipeName.getText().toString();
 
             LastSearch lastSearch = new LastSearch(recipeSearch, fAuth.getCurrentUser().getEmail());
-
             fDatabaseReference.push().setValue(lastSearch);
 
-            Map<String, String> query = new HashMap<>();
-            query.put("query", recipeSearch);
-            query.put("addRecipeInformation", "true");
-            query.put("number", MAX_RESULTS_NUMBER);
-            query.put("apiKey", API_KEY);
-
-            Call<RecipeList> call_async = apiService.getRecipesByName(query);
-
-            call_async.enqueue(new Callback<RecipeList>() {
-                @Override
-                public void onResponse(Call<RecipeList> call, Response<RecipeList> response) {
-                    RecipeList recipeList = response.body();
-
-                    if(null != recipeList) {
-                        resultsDto = new ResultDto[recipeList.getResults().size()];
-                        for(int i = 0; i < recipeList.getResults().size(); i++) {
-                            resultsDto[i] = ResultDto.fromResult(recipeList.getResults().get(i));
-                        }
-
-                        RecipeAdapter adapter = new RecipeAdapter(
-                                SearchActivity.this,
-                                R.layout.result_item,
-                                resultsDto
-                        );
-
-                        lvResultsList.setAdapter(adapter);
-                    } else {
-                        Log.i(LOG_TAG, getString(R.string.strError));
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<RecipeList> call, Throwable t) {
-                    Toast.makeText(
-                            getApplicationContext(),
-                            "ERROR: " + t.getMessage(),
-                            Toast.LENGTH_LONG
-                    ).show();
-                    Log.e(LOG_TAG, t.getMessage());
-                }
-            });
+            this.callAPI(recipeSearch);
         } else {
             Toast.makeText(this, getString(R.string.sign_in_required), Toast.LENGTH_SHORT)
                     .show();
         }
+    }
 
+    private void callAPI(String recipeName) {
+        Map<String, String> query = new HashMap<>();
+        query.put("query", recipeName);
+        query.put("addRecipeInformation", "true");
+        query.put("number", MAX_RESULTS_NUMBER);
+        query.put("apiKey", API_KEY);
+
+        Call<RecipeList> call_async = apiService.getRecipesByName(query);
+
+        call_async.enqueue(new Callback<RecipeList>() {
+            @Override
+            public void onResponse(Call<RecipeList> call, Response<RecipeList> response) {
+                RecipeList recipeList = response.body();
+
+                if(null != recipeList) {
+                    resultsDto = new ResultDto[recipeList.getResults().size()];
+                    for(int i = 0; i < recipeList.getResults().size(); i++) {
+                        resultsDto[i] = ResultDto.fromResult(recipeList.getResults().get(i));
+                    }
+
+                    RecipeAdapter adapter = new RecipeAdapter(
+                            SearchActivity.this,
+                            R.layout.result_item,
+                            resultsDto
+                    );
+
+                    lvResultsList.setAdapter(adapter);
+                } else {
+                    Log.i(LOG_TAG, getString(R.string.strError));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<RecipeList> call, Throwable t) {
+                Toast.makeText(
+                        getApplicationContext(),
+                        "ERROR: " + t.getMessage(),
+                        Toast.LENGTH_LONG
+                ).show();
+                Log.e(LOG_TAG, t.getMessage());
+            }
+        });
     }
 
     @Override

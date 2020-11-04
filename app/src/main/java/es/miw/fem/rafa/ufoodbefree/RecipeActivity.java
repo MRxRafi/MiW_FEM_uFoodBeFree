@@ -42,29 +42,31 @@ public class RecipeActivity extends AppCompatActivity {
         healthScore = findViewById(R.id.ra_healthScore);
         recipeTime = findViewById(R.id.ra_clockText);
 
-        recipeName.setText(result.getTitle());
-        recipeDescription.setText(result.getSummary());
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            recipeDescription.setText(Html.fromHtml(result.getSummary(), Html.FROM_HTML_MODE_COMPACT));
-        } else {
-            recipeDescription.setText(Html.fromHtml(result.getSummary()));
-        }
+        if(result != null) {
+            recipeName.setText(result.getTitle());
+            recipeDescription.setText(result.getSummary());
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                recipeDescription.setText(Html.fromHtml(result.getSummary(), Html.FROM_HTML_MODE_COMPACT));
+            } else {
+                recipeDescription.setText(Html.fromHtml(result.getSummary()));
+            }
 
-        Glide.with(this)
-                .load(result.getImage())
-                .override(600, 600)
-                .centerCrop()
-                .into(recipeImage);
+            Glide.with(this)
+                    .load(result.getImage())
+                    .override(600, 600)
+                    .centerCrop()
+                    .into(recipeImage);
 
-        healthScore.setText("Health Score: " + String.valueOf(result.getHealthScore()));
-        if(result.getHealthScore() < 33) {
-            healthScore.setBackgroundColor(getResources().getColor(android.R.color.holo_red_light));
-        } else if(result.getHealthScore() >= 33 && result.getHealthScore() < 80) {
-            healthScore.setBackgroundColor(getResources().getColor(android.R.color.holo_orange_light));
-        } else {
-            healthScore.setBackgroundColor(getResources().getColor(android.R.color.holo_green_light));
+            healthScore.setText("Health Score: " + String.valueOf(result.getHealthScore()));
+            if(result.getHealthScore() < 33) {
+                healthScore.setBackgroundColor(getResources().getColor(android.R.color.holo_red_light));
+            } else if(result.getHealthScore() >= 33 && result.getHealthScore() < 80) {
+                healthScore.setBackgroundColor(getResources().getColor(android.R.color.holo_orange_light));
+            } else {
+                healthScore.setBackgroundColor(getResources().getColor(android.R.color.holo_green_light));
+            }
+            recipeTime.setText(String.valueOf(result.getReadyInMinutes()));
         }
-        recipeTime.setText(String.valueOf(result.getReadyInMinutes()));
 
         // Mostrar el icono back en la ActionBar
         ActionBar actionBar = getSupportActionBar();

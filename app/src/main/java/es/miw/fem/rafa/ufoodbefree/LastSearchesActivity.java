@@ -31,6 +31,8 @@ import es.miw.fem.rafa.ufoodbefree.models.LastSearch;
 
 public class LastSearchesActivity extends AppCompatActivity {
 
+    private final String SAVED_SEARCH = "search";
+
     FirebaseAuth fAuth;
     FirebaseDatabase fDatabase;
     DatabaseReference fDatabaseReference;
@@ -57,10 +59,18 @@ public class LastSearchesActivity extends AppCompatActivity {
         lvSearches.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                // TODO Iniciar actividad search realizando búsqueda seleccionada
-                String str = ((TextView) view.findViewById(R.id.tvSearchItem)).getText().toString();
-                Toast.makeText(LastSearchesActivity.this, str, Toast.LENGTH_SHORT)
-                        .show();
+                if(fAuth.getCurrentUser() != null) {
+                    String str = ((TextView) view.findViewById(R.id.tvSearchItem)).getText().toString();
+
+                    Intent intent = new Intent(LastSearchesActivity.this, SearchActivity.class);
+                    intent.putExtra(SAVED_SEARCH, str);
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(LastSearchesActivity.this, getString(R.string.sign_in_required), Toast.LENGTH_SHORT)
+                            .show();
+                }
+
+
             }
         });
 
