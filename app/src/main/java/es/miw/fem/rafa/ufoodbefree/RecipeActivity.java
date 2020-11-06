@@ -1,5 +1,6 @@
 package es.miw.fem.rafa.ufoodbefree;
 
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Html;
@@ -10,6 +11,7 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.PreferenceManager;
 
 import com.bumptech.glide.Glide;
 
@@ -20,6 +22,7 @@ public class RecipeActivity extends AppCompatActivity {
 
     private static final String LOG_TAG = "MiW";
     private static final String SAVED_INSTANCE = "results";
+    private static String IP_PRISMA;
 
     ResultDto result;
 
@@ -42,6 +45,27 @@ public class RecipeActivity extends AppCompatActivity {
         healthScore = findViewById(R.id.ra_healthScore);
         recipeTime = findViewById(R.id.ra_clockText);
 
+        // Mostrar el icono back en la ActionBar
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            // Icono Actionbar
+            actionBar.setHomeAsUpIndicator(R.mipmap.ic_miw_launcher_round);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        IP_PRISMA = sharedPreferences.getString(
+                "ipPrisma",
+                getString(R.string.prisma_defaultIP)
+        );
+
+        Toast.makeText(this, IP_PRISMA, Toast.LENGTH_SHORT)
+                .show();
+
         if(result != null) {
             recipeName.setText(result.getTitle());
             recipeDescription.setText(result.getSummary());
@@ -57,7 +81,7 @@ public class RecipeActivity extends AppCompatActivity {
                     .centerCrop()
                     .into(recipeImage);
 
-            healthScore.setText("Health Score: " + String.valueOf(result.getHealthScore()));
+            healthScore.setText("Health Score: " + result.getHealthScore());
             if(result.getHealthScore() < 33) {
                 healthScore.setBackgroundColor(getResources().getColor(android.R.color.holo_red_light));
             } else if(result.getHealthScore() >= 33 && result.getHealthScore() < 80) {
@@ -66,14 +90,6 @@ public class RecipeActivity extends AppCompatActivity {
                 healthScore.setBackgroundColor(getResources().getColor(android.R.color.holo_green_light));
             }
             recipeTime.setText(String.valueOf(result.getReadyInMinutes()));
-        }
-
-        // Mostrar el icono back en la ActionBar
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            // Icono Actionbar
-            actionBar.setHomeAsUpIndicator(R.mipmap.ic_miw_launcher_round);
-            actionBar.setDisplayHomeAsUpEnabled(true);
         }
     }
 }

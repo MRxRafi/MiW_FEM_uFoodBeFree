@@ -18,7 +18,6 @@
     <string name="email_fmt">Email: %s</string>
     <string name="email_none">Email: none</string>
 
-
     <!-- Search -->
     <string name="btnDescripcion">Buscar</string>
     <string name="btnTodos">Todos</string>
@@ -28,4 +27,13 @@
     <!-- Menu -->
     <string name="menuPreviousSearches">Previous searches</string>
     <string name="menuRecipes">Search recipes</string>
+    <string name="menuSettings">Settings</string>
+
+    <!-- Preferencias -->
+    <string name="prisma_header">Configuración lámpara IoT</string>
+    <string name="search_header">Configuración búsqueda recetas</string>
+    <string name="ip_title">IP de la lámpara</string>
+    <string name="nRecetas_title">Número de resultados máximos</string>
+    <string name="prisma_defaultIP">192.168.0.102</string>
+    <string name="nRecetas_default">5</string>
 </resources>

@@ -86,6 +86,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu, menu);
         menu.add(Menu.NONE, 2, Menu.NONE, R.string.menuRecipes);
+        menu.add(Menu.NONE, 3, Menu.NONE, R.string.menuSettings);
         return true;
     }
 
@@ -107,7 +108,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     Toast.makeText(this, R.string.sign_in_required, Toast.LENGTH_SHORT)
                             .show();
                 }
-
+                break;
+            case 3:
+                if(fAuth.getCurrentUser() != null) {
+                    startActivity(new Intent(this, SettingsActivity.class));
+                } else {
+                    Toast.makeText(this, R.string.sign_in_required, Toast.LENGTH_SHORT)
+                            .show();
+                }
                 break;
         }
         return true;

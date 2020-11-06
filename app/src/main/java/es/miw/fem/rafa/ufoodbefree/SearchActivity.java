@@ -1,6 +1,7 @@
 package es.miw.fem.rafa.ufoodbefree;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -14,6 +15,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.PreferenceManager;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
@@ -36,7 +38,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class SearchActivity extends AppCompatActivity {
     private static final String API_BASE_URL = "https://api.spoonacular.com";
     private static final String API_KEY = "7b85f04565ac44609112d2e20c7fa24c";
-    private static final String MAX_RESULTS_NUMBER = "10";
+    private static String MAX_RESULTS_NUMBER;
 
     private static final String LOG_TAG = "MiW";
 
@@ -83,17 +85,28 @@ public class SearchActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        String lastSearch = getIntent().getStringExtra(SAVED_SEARCH);
-        if(lastSearch != null) {
-            this.callAPI(lastSearch);
-        }
-
         // Mostrar el icono back en la ActionBar
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             // Icono Actionbar
             actionBar.setHomeAsUpIndicator(R.mipmap.ic_miw_launcher_round);
             actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+
+        MAX_RESULTS_NUMBER = String.valueOf(sharedPreferences.getInt(
+                "nMaxSearchElements",
+                R.string.nRecetas_default
+        ));
+
+        String lastSearch = getIntent().getStringExtra(SAVED_SEARCH);
+        if(lastSearch != null) {
+            this.callAPI(lastSearch);
         }
     }
 
@@ -192,7 +205,9 @@ public class SearchActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu, menu);
-        menu.add(Menu.NONE, 2, Menu.NONE, R.string.sign_out);
+        menu.add(Menu.NONE, 2, Menu.NONE, R.string.menuSettings);
+        menu.add(Menu.NONE, 3, Menu.NONE, R.string.sign_out);
+
         return true;
     }
 
@@ -209,6 +224,14 @@ public class SearchActivity extends AppCompatActivity {
 
                 break;
             case 2:
+                if(fAuth.getCurrentUser() != null) {
+                    startActivity(new Intent(this, SettingsActivity.class));
+                } else {
+                    Toast.makeText(this, getString(R.string.sign_in_required), Toast.LENGTH_SHORT)
+                            .show();
+                }
+                break;
+            case 3:
                 this.signOut();
                 break;
         }
