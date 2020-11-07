@@ -3,8 +3,10 @@ package es.miw.fem.rafa.ufoodbefree;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.PreferenceManager;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -24,6 +26,8 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+
+import es.miw.fem.rafa.ufoodbefree.utils.SendDeviceDetails;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -51,6 +55,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.statusSwitch).setClickable(false);
 
         fAuth = FirebaseAuth.getInstance();
+
+        this.initPrisma();
 
         // Mostrar el icono back en la ActionBar
         ActionBar actionBar = getSupportActionBar();
@@ -204,5 +210,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         bSignIn.setEnabled(!signedIn);
         bSignOut.setEnabled(signedIn);
         sLogStatus.setChecked(signedIn);
+    }
+
+    private void initPrisma() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        String IP_PRISMA = sharedPreferences.getString(
+                "ipPrisma",
+                getString(R.string.prisma_defaultIP)
+        );
+        new SendDeviceDetails().execute("http://" + IP_PRISMA + "/ring/on/","");
     }
 }

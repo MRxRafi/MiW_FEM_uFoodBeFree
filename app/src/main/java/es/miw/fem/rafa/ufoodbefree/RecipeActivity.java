@@ -15,8 +15,12 @@ import androidx.preference.PreferenceManager;
 
 import com.bumptech.glide.Glide;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import es.miw.fem.rafa.ufoodbefree.dtos.ResultDto;
 import es.miw.fem.rafa.ufoodbefree.utils.GsonSingle;
+import es.miw.fem.rafa.ufoodbefree.utils.SendDeviceDetails;
 
 public class RecipeActivity extends AppCompatActivity {
 
@@ -63,9 +67,6 @@ public class RecipeActivity extends AppCompatActivity {
                 getString(R.string.prisma_defaultIP)
         );
 
-        Toast.makeText(this, IP_PRISMA, Toast.LENGTH_SHORT)
-                .show();
-
         if(result != null) {
             recipeName.setText(result.getTitle());
             recipeDescription.setText(result.getSummary());
@@ -81,14 +82,31 @@ public class RecipeActivity extends AppCompatActivity {
                     .centerCrop()
                     .into(recipeImage);
 
+            int[] rgb = new int[3];
             healthScore.setText("Health Score: " + result.getHealthScore());
             if(result.getHealthScore() < 33) {
                 healthScore.setBackgroundColor(getResources().getColor(android.R.color.holo_red_light));
+                rgb[0] = 255;
             } else if(result.getHealthScore() >= 33 && result.getHealthScore() < 80) {
                 healthScore.setBackgroundColor(getResources().getColor(android.R.color.holo_orange_light));
+                rgb[0] = 255;
+                rgb[1] = 128;
             } else {
                 healthScore.setBackgroundColor(getResources().getColor(android.R.color.holo_green_light));
+                rgb[2] = 255;
             }
+
+            JSONObject json = new JSONObject();
+            try {
+                json.put("r", rgb[0]);
+                json.put("g", rgb[1]);
+                json.put("b", rgb[2]);
+                new SendDeviceDetails().execute("http://" + IP_PRISMA + "/ring/color/", json.toString());
+            } catch (JSONException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+
             recipeTime.setText(String.valueOf(result.getReadyInMinutes()));
         }
     }
